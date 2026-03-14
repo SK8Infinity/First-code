@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Laptops</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Primary">
+    <div class="nav__inner">
+      <a class="nav__brand" href="index.html">Laptop Showcase</a>
+      <div class="nav__links">
+        <a class="nav__link" href="laptop.html">Browse</a>
+        <a class="nav__link" href="compare.html">Compare</a>
+        <a class="nav__link" href="acer.html">Acer</a>
+        <a class="nav__link" href="asus.html">ASUS</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="hero" aria-label="Browse laptops">
+      <h1>All Laptops</h1>
+      <p>Search, filter, and compare the best laptop models from top brands. Click a card to view details.</p>
+
+      <div style="margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;">
+        <input id="search" type="search" placeholder="Search by brand, model, CPU..." style="min-width: 240px; padding: 0.85rem 1rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: var(--text);" />
+
+        <select id="brand" style="min-width: 160px; padding: 0.85rem 1rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: var(--text);">
+          <option value="">All brands</option>
+          <option value="Acer">Acer</option>
+          <option value="ASUS">ASUS</option>
+        </select>
+
+        <button id="darkToggle" class="button">Toggle Dark Mode</button>
+      </div>
+    </section>
+
+    <section style="margin-top: 2.5rem;">
+      <h2>Models</h2>
+      <div id="catalog" class="grid grid-2" style="margin-top: 1.25rem;"></div>
+    </section>
+  </main>
+
+  <footer>
+    Back to <a href="index.html">Home</a> · <a href="compare.html">Compare</a>
+  </footer>
+
+  <script>
+    const products = [
+      {
+        id: "acer-helio",
+        brand: "Acer",
+        model: "Helios 300",
+        image: "acerheilo.jpg",
+        description: "High-performance gaming laptop with RTX graphics.",
+        specs: {
+          CPU: "Intel Core i7-13800H",
+          GPU: "NVIDIA GeForce RTX 4060",
+          RAM: "32GB DDR5",
+          Storage: "2TB NVMe SSD",
+          Display: "15.6\" Full HD 144Hz"
+        },
+        detailsLink: "acer.html"
+      },
+      {
+        id: "acer-lite",
+        brand: "Acer",
+        model: "Aspire Lite 14",
+        image: "acerlite14.jpg",
+        description: "Slim ultrabook with great battery life for everyday use.",
+        specs: {
+          CPU: "Intel Core i5-13500H",
+          GPU: "Intel Iris Xe Graphics",
+          RAM: "16GB DDR5",
+          Storage: "512GB NVMe SSD",
+          Display: "14\" Full HD 60Hz"
+        },
+        detailsLink: "acer.html"
+      },
+      {
+        id: "asus-tuf",
+        brand: "ASUS",
+        model: "TUF Gaming A16",
+        image: "asus-tuf.jpg",
+        description: "Durable gaming laptop with a high-refresh QHD display.",
+        specs: {
+          CPU: "AMD Ryzen 7 7840HS",
+          GPU: "NVIDIA GeForce RTX 4070",
+          RAM: "16GB DDR5",
+          Storage: "1TB NVMe SSD",
+          Display: "16\" QHD 165Hz"
+        },
+        detailsLink: "asus.html"
+      },
+      {
+        id: "asus-zenbook",
+        brand: "ASUS",
+        model: "ZenBook 14",
+        image: "asus-zenbook.jpg",
+        description: "Lightweight productivity laptop with OLED touch display.",
+        specs: {
+          CPU: "Intel Core i7-1360P",
+          GPU: "Intel Iris Xe Graphics",
+          RAM: "16GB LPDDR5",
+          Storage: "1TB NVMe SSD",
+          Display: "14\" OLED 90Hz"
+        },
+        detailsLink: "asus.html"
+      }
+    ];
+
+    const catalogEl = document.getElementById("catalog");
+    const searchEl = document.getElementById("search");
+    const brandEl = document.getElementById("brand");
+    const darkToggle = document.getElementById("darkToggle");
+
+    function renderCatalog() {
+      const query = searchEl.value.toLowerCase().trim();
+      const brandFilter = brandEl.value;
+
+      const visible = products.filter((product) => {
+        const matchesBrand = !brandFilter || product.brand === brandFilter;
+        const matchesQuery =
+          !query ||
+          [product.brand, product.model, product.description]
+            .join(" ")
+            .toLowerCase()
+            .includes(query);
+        return matchesBrand && matchesQuery;
+      });
+
+      if (!visible.length) {
+        catalogEl.innerHTML = `<div class="card"><p>No models match your search.</p></div>`;
+        return;
+      }
+
+      catalogEl.innerHTML = visible
+        .map((product) => {
+          return `
+            <article class="card">
+              <img src="${product.image}" alt="${product.brand} ${product.model}" />
+              <h3>${product.brand} ${product.model}</h3>
+              <p>${product.description}</p>
+              <p style="font-size: 0.95rem; color: rgba(255,255,255,0.75);">
+                <strong>CPU:</strong> ${product.specs.CPU} ·
+                <strong>GPU:</strong> ${product.specs.GPU}
+              </p>
+              <a class="btn" href="${product.detailsLink}">View details</a>
+            </article>
+          `;
+        })
+        .join("");
+    }
+
+    function initTheme() {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const stored = localStorage.getItem("site-theme");
+      if (stored === "dark" || (!stored && prefersDark)) {
+        document.documentElement.style.setProperty("--bg", "#05050c");
+      }
+    }
+
+    darkToggle.addEventListener("click", () => {
+      const current = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
+      const next = current === "#f7f7f7" ? "#05050c" : "#f7f7f7";
+      const text = next === "#f7f7f7" ? "#05050c" : "#f6f7ff";
+      document.documentElement.style.setProperty("--bg", next);
+      document.documentElement.style.setProperty("--text", text);
+      localStorage.setItem("site-theme", next === "#05050c" ? "dark" : "light");
+    });
+
+    searchEl.addEventListener("input", renderCatalog);
+    brandEl.addEventListener("change", renderCatalog);
+
+    initTheme();
+    renderCatalog();
+  </script>
+</body>
+</html>

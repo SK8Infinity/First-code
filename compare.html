@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compare Laptops</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Primary">
+    <div class="nav__inner">
+      <a class="nav__brand" href="index.html">Laptop Showcase</a>
+      <div class="nav__links">
+        <a class="nav__link" href="laptop.html">Browse</a>
+        <a class="nav__link" href="compare.html">Compare</a>
+        <a class="nav__link" href="acer.html">Acer</a>
+        <a class="nav__link" href="asus.html">ASUS</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="hero" aria-label="Compare models">
+      <h1>Compare Two Laptops</h1>
+      <p>Select models to see a quick spec comparison and decide which one fits your needs better.</p>
+    </section>
+
+    <section style="margin-top: 2.5rem;">
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Select a model</h3>
+          <select id="leftModel" class="input" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: var(--text);">
+            <option value="acer-helio">Acer Helios 300</option>
+            <option value="asus-tuf">ASUS TUF Gaming A16</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <h3>Select a model</h3>
+          <select id="rightModel" class="input" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: var(--text);">
+            <option value="asus-tuf">ASUS TUF Gaming A16</option>
+            <option value="acer-helio">Acer Helios 300</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="compareGrid" class="grid grid-2" style="margin-top: 1.5rem;"></div>
+    </section>
+  </main>
+
+  <footer>
+    Back to <a href="index.html">Home</a> · <a href="laptop.html">Browse</a> · <a href="acer.html">Acer</a>
+  </footer>
+
+  <script>
+    const specs = {
+      "acer-helio": {
+        title: "Acer Helios 300",
+        cpu: "Intel Core i7-13800H",
+        gpu: "NVIDIA GeForce RTX 4060",
+        ram: "32GB DDR5",
+        storage: "2TB NVMe SSD",
+        display: "15.6\" Full HD 144Hz",
+        weight: "2.5kg",
+        battery: "76Wh"
+      },
+      "asus-tuf": {
+        title: "ASUS TUF Gaming A16",
+        cpu: "AMD Ryzen 7 7840HS",
+        gpu: "NVIDIA GeForce RTX 4070",
+        ram: "16GB DDR5",
+        storage: "1TB NVMe SSD",
+        display: "16\" QHD 165Hz",
+        weight: "2.3kg",
+        battery: "90Wh"
+      }
+    };
+
+    const leftSelect = document.getElementById("leftModel");
+    const rightSelect = document.getElementById("rightModel");
+    const compareGrid = document.getElementById("compareGrid");
+
+    function renderComparison() {
+      const left = specs[leftSelect.value];
+      const right = specs[rightSelect.value];
+
+      compareGrid.innerHTML = `
+        <div class="card">
+          <h3>${left.title}</h3>
+          <p><strong>CPU:</strong> ${left.cpu}</p>
+          <p><strong>GPU:</strong> ${left.gpu}</p>
+          <p><strong>RAM:</strong> ${left.ram}</p>
+          <p><strong>Storage:</strong> ${left.storage}</p>
+          <p><strong>Display:</strong> ${left.display}</p>
+          <p><strong>Battery:</strong> ${left.battery}</p>
+          <p><strong>Weight:</strong> ${left.weight}</p>
+        </div>
+
+        <div class="card">
+          <h3>${right.title}</h3>
+          <p><strong>CPU:</strong> ${right.cpu}</p>
+          <p><strong>GPU:</strong> ${right.gpu}</p>
+          <p><strong>RAM:</strong> ${right.ram}</p>
+          <p><strong>Storage:</strong> ${right.storage}</p>
+          <p><strong>Display:</strong> ${right.display}</p>
+          <p><strong>Battery:</strong> ${right.battery}</p>
+          <p><strong>Weight:</strong> ${right.weight}</p>
+        </div>
+      `;
+    }
+
+    leftSelect.addEventListener("change", renderComparison);
+    rightSelect.addEventListener("change", renderComparison);
+
+    renderComparison();
+  </script>
+</body>
+</html>
